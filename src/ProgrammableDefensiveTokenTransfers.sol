@@ -5,9 +5,12 @@ import {IRouterClient} from "@chainlink/contracts-ccip/src/v0.8/ccip/interfaces/
 import {OwnerIsCreator} from "@chainlink/contracts-ccip/src/v0.8/shared/access/OwnerIsCreator.sol";
 import {Client} from "@chainlink/contracts-ccip/src/v0.8/ccip/libraries/Client.sol";
 import {CCIPReceiver} from "@chainlink/contracts-ccip/src/v0.8/ccip/applications/CCIPReceiver.sol";
-import {IERC20} from "@chainlink/contracts-ccip/src/v0.8/vendor/openzeppelin-solidity/v4.8.3/contracts/token/ERC20/IERC20.sol";
-import {SafeERC20} from "@chainlink/contracts-ccip/src/v0.8/vendor/openzeppelin-solidity/v4.8.3/contracts/token/ERC20/utils/SafeERC20.sol";
-import {EnumerableMap} from "@chainlink/contracts-ccip/src/v0.8/vendor/openzeppelin-solidity/v4.8.3/contracts/utils/structs/EnumerableMap.sol";
+import {IERC20} from
+    "@chainlink/contracts-ccip/src/v0.8/vendor/openzeppelin-solidity/v4.8.3/contracts/token/ERC20/IERC20.sol";
+import {SafeERC20} from
+    "@chainlink/contracts-ccip/src/v0.8/vendor/openzeppelin-solidity/v4.8.3/contracts/token/ERC20/utils/SafeERC20.sol";
+import {EnumerableMap} from
+    "@chainlink/contracts-ccip/src/v0.8/vendor/openzeppelin-solidity/v4.8.3/contracts/utils/structs/EnumerableMap.sol";
 
 /**
  * 这是一个使用硬编码值来增加清晰度的示例合约。
@@ -47,25 +50,37 @@ contract ProgrammableDefensiveTokenTransfers is CCIPReceiver, OwnerIsCreator {
     }
 
     // 当消息发送到另一个链时发出的事件。
-    event MessageSent(
-        bytes32 indexed messageId, // CCIP消息的唯一ID。
-        uint64 indexed destinationChainSelector, // 目的链的链选择器。
-        address receiver, // 目的链上的接收地址。
-        string text, // 被发送的文本。
-        address token, // 被转移的代币地址。
-        uint256 tokenAmount, // 被转移的代币数量。
-        address feeToken, // 用于支付CCIP费用的代币地址。
-        uint256 fees // 为发送消息支付的费用。
+    event MessageSent( // CCIP消息的唯一ID。
+        // 目的链的链选择器。
+        // 目的链上的接收地址。
+        // 被发送的文本。
+        // 被转移的代币地址。
+        // 被转移的代币数量。
+        // 用于支付CCIP费用的代币地址。
+        // 为发送消息支付的费用。
+        bytes32 indexed messageId,
+        uint64 indexed destinationChainSelector,
+        address receiver,
+        string text,
+        address token,
+        uint256 tokenAmount,
+        address feeToken,
+        uint256 fees
     );
 
     // 当从另一个链收到消息时发出的事件。
-    event MessageReceived(
-        bytes32 indexed messageId, // CCIP消息的唯一ID。
-        uint64 indexed sourceChainSelector, // 来源链的链选择器。
-        address sender, // 来自源链的发件人地址。
-        string text, // 收到的文本。
-        address token, // 被转移的代币地址。
-        uint256 tokenAmount // 被转移的代币数量。
+    event MessageReceived( // CCIP消息的唯一ID。
+        // 来源链的链选择器。
+        // 来自源链的发件人地址。
+        // 收到的文本。
+        // 被转移的代币地址。
+        // 被转移的代币数量。
+        bytes32 indexed messageId,
+        uint64 indexed sourceChainSelector,
+        address sender,
+        string text,
+        address token,
+        uint256 tokenAmount
     );
 
     event MessageFailed(bytes32 indexed messageId, bytes reason);
@@ -88,8 +103,7 @@ contract ProgrammableDefensiveTokenTransfers is CCIPReceiver, OwnerIsCreator {
     IERC20 private s_linkToken;
 
     // 存储失败消息的内容。
-    mapping(bytes32 messageId => Client.Any2EVMMessage contents)
-        public s_messageContents;
+    mapping(bytes32 messageId => Client.Any2EVMMessage contents) public s_messageContents;
 
     // 包含失败消息及其状态。
     EnumerableMap.Bytes32ToUintMap internal s_failedMessages;
@@ -107,8 +121,9 @@ contract ProgrammableDefensiveTokenTransfers is CCIPReceiver, OwnerIsCreator {
     /// @dev 修饰符，用于检查给定目标链选择器的链是否被列入允许名单。
     /// @param _destinationChainSelector 目的链的选择器。
     modifier onlyAllowlistedDestinationChain(uint64 _destinationChainSelector) {
-        if (!allowlistedDestinationChains[_destinationChainSelector])
+        if (!allowlistedDestinationChains[_destinationChainSelector]) {
             revert DestinationChainNotAllowlisted(_destinationChainSelector);
+        }
         _;
     }
 
@@ -116,8 +131,9 @@ contract ProgrammableDefensiveTokenTransfers is CCIPReceiver, OwnerIsCreator {
     /// @param _sourceChainSelector 目的链的选择器。
     /// @param _sender 发件人的地址。
     modifier onlyAllowlisted(uint64 _sourceChainSelector, address _sender) {
-        if (!allowlistedSourceChains[_sourceChainSelector])
+        if (!allowlistedSourceChains[_sourceChainSelector]) {
             revert SourceChainNotAllowed(_sourceChainSelector);
+        }
         if (!allowlistedSenders[_sender]) revert SenderNotAllowed(_sender);
         _;
     }
@@ -140,10 +156,7 @@ contract ProgrammableDefensiveTokenTransfers is CCIPReceiver, OwnerIsCreator {
     /// @notice 只能由所有者调用此功能。
     /// @param _destinationChainSelector 要更新的目的链选择器。
     /// @param allowed 设置目的链的允许状态。
-    function allowlistDestinationChain(
-        uint64 _destinationChainSelector,
-        bool allowed
-    ) external onlyOwner {
+    function allowlistDestinationChain(uint64 _destinationChainSelector, bool allowed) external onlyOwner {
         allowlistedDestinationChains[_destinationChainSelector] = allowed;
     }
 
@@ -151,10 +164,7 @@ contract ProgrammableDefensiveTokenTransfers is CCIPReceiver, OwnerIsCreator {
     /// @notice 只能由所有者调用此功能。
     /// @param _sourceChainSelector 要更新的源链选择器。
     /// @param allowed 设置源链的允许状态。
-    function allowlistSourceChain(
-        uint64 _sourceChainSelector,
-        bool allowed
-    ) external onlyOwner {
+    function allowlistSourceChain(uint64 _sourceChainSelector, bool allowed) external onlyOwner {
         allowlistedSourceChains[_sourceChainSelector] = allowed;
     }
 
@@ -190,13 +200,8 @@ contract ProgrammableDefensiveTokenTransfers is CCIPReceiver, OwnerIsCreator {
     {
         // 在内存中创建一个 EVM2AnyMessage 结构，其中包含发送跨链消息所需的信息
         // address(linkToken) 表示费用以 LINK 支付
-        Client.EVM2AnyMessage memory evm2AnyMessage = _buildCCIPMessage(
-            _receiver,
-            _text,
-            _token,
-            _amount,
-            address(s_linkToken)
-        );
+        Client.EVM2AnyMessage memory evm2AnyMessage =
+            _buildCCIPMessage(_receiver, _text, _token, _amount, address(s_linkToken));
 
         // 初始化一个路由器客户端实例，以与跨链路由器交互
         IRouterClient router = IRouterClient(this.getRouter());
@@ -204,8 +209,9 @@ contract ProgrammableDefensiveTokenTransfers is CCIPReceiver, OwnerIsCreator {
         // 获取发送 CCIP 消息所需的费用
         uint256 fees = router.getFee(_destinationChainSelector, evm2AnyMessage);
 
-        if (fees > s_linkToken.balanceOf(address(this)))
+        if (fees > s_linkToken.balanceOf(address(this))) {
             revert NotEnoughBalance(s_linkToken.balanceOf(address(this)), fees);
+        }
 
         // 批准路由器代表合约转移 LINK 代币。它将花费费用中的 LINK
         s_linkToken.approve(address(router), fees);
@@ -218,14 +224,7 @@ contract ProgrammableDefensiveTokenTransfers is CCIPReceiver, OwnerIsCreator {
 
         // 发出一个事件，其中包含消息详细信息
         emit MessageSent(
-            messageId,
-            _destinationChainSelector,
-            _receiver,
-            _text,
-            _token,
-            _amount,
-            address(s_linkToken),
-            fees
+            messageId, _destinationChainSelector, _receiver, _text, _token, _amount, address(s_linkToken), fees
         );
 
         // 返回消息 ID
@@ -256,13 +255,7 @@ contract ProgrammableDefensiveTokenTransfers is CCIPReceiver, OwnerIsCreator {
     {
         // 在内存中创建一个 EVM2AnyMessage 结构，其中包含发送跨链消息所需的信息
         // address(0) 表示费用以原生气体支付
-        Client.EVM2AnyMessage memory evm2AnyMessage = _buildCCIPMessage(
-            _receiver,
-            _text,
-            _token,
-            _amount,
-            address(0)
-        );
+        Client.EVM2AnyMessage memory evm2AnyMessage = _buildCCIPMessage(_receiver, _text, _token, _amount, address(0));
 
         // 初始化一个路由器客户端实例，以与跨链路由器交互
         IRouterClient router = IRouterClient(this.getRouter());
@@ -270,29 +263,18 @@ contract ProgrammableDefensiveTokenTransfers is CCIPReceiver, OwnerIsCreator {
         // 获取发送 CCIP 消息所需的费用
         uint256 fees = router.getFee(_destinationChainSelector, evm2AnyMessage);
 
-        if (fees > address(this).balance)
+        if (fees > address(this).balance) {
             revert NotEnoughBalance(address(this).balance, fees);
+        }
 
         // 批准路由器代表合约花费给定数量的代币。它将花费给定数量的代币
         IERC20(_token).approve(address(router), _amount);
 
         // 通过路由器发送消息，并存储返回的消息 ID
-        messageId = router.ccipSend{value: fees}(
-            _destinationChainSelector,
-            evm2AnyMessage
-        );
+        messageId = router.ccipSend{value: fees}(_destinationChainSelector, evm2AnyMessage);
 
         // 发出一个事件，其中包含消息详细信息
-        emit MessageSent(
-            messageId,
-            _destinationChainSelector,
-            _receiver,
-            _text,
-            _token,
-            _amount,
-            address(0),
-            fees
-        );
+        emit MessageSent(messageId, _destinationChainSelector, _receiver, _text, _token, _amount, address(0), fees);
 
         // 返回消息 ID
         return messageId;
@@ -309,19 +291,9 @@ contract ProgrammableDefensiveTokenTransfers is CCIPReceiver, OwnerIsCreator {
     function getLastReceivedMessageDetails()
         public
         view
-        returns (
-            bytes32 messageId,
-            string memory text,
-            address tokenAddress,
-            uint256 tokenAmount
-        )
+        returns (bytes32 messageId, string memory text, address tokenAddress, uint256 tokenAmount)
     {
-        return (
-            s_lastReceivedMessageId,
-            s_lastReceivedText,
-            s_lastReceivedTokenAddress,
-            s_lastReceivedTokenAmount
-        );
+        return (s_lastReceivedMessageId, s_lastReceivedText, s_lastReceivedTokenAddress, s_lastReceivedTokenAmount);
     }
 
     /**
@@ -331,25 +303,16 @@ contract ProgrammableDefensiveTokenTransfers is CCIPReceiver, OwnerIsCreator {
      * @param limit 要返回的失败消息的最大数量，限制返回数组的大小。
      * @return failedMessages `FailedMessage` 结构的数组，每个结构包含一个 `messageId` 和一个 `errorCode`（解决或失败），表示请求的失败消息的子集。返回数组的长度由 `limit` 和失败消息的总数决定。
      */
-    function getFailedMessages(
-        uint256 offset,
-        uint256 limit
-    ) external view returns (FailedMessage[] memory) {
+    function getFailedMessages(uint256 offset, uint256 limit) external view returns (FailedMessage[] memory) {
         uint256 length = s_failedMessages.length();
 
         // 计算实际返回的项目数量（不能超过总长度或请求的限制）
-        uint256 returnLength = (offset + limit > length)
-            ? length - offset
-            : limit;
-        FailedMessage[] memory failedMessages = new FailedMessage[](
-            returnLength
-        );
+        uint256 returnLength = (offset + limit > length) ? length - offset : limit;
+        FailedMessage[] memory failedMessages = new FailedMessage[](returnLength);
 
         // 调整循环以尊重分页（从 offset 开始，结束于 offset + limit 或总长度）
         for (uint256 i = 0; i < returnLength; i++) {
-            (bytes32 messageId, uint256 errorCode) = s_failedMessages.at(
-                offset + i
-            );
+            (bytes32 messageId, uint256 errorCode) = s_failedMessages.at(offset + i);
             failedMessages[i] = FailedMessage(messageId, ErrorCode(errorCode));
         }
         return failedMessages;
@@ -358,26 +321,18 @@ contract ProgrammableDefensiveTokenTransfers is CCIPReceiver, OwnerIsCreator {
     /// @notice CCIP 路由器调用的入口点。此功能不应撤销，所有错误应在合约内部处理。
     /// @param any2EvmMessage 要处理的消息。
     /// @dev 非常重要的是确保只有路由器调用此功能。
-    function ccipReceive(
-        Client.Any2EVMMessage calldata any2EvmMessage
-    )
+    function ccipReceive(Client.Any2EVMMessage calldata any2EvmMessage)
         external
         override
         onlyRouter
-        onlyAllowlisted(
-            any2EvmMessage.sourceChainSelector,
-            abi.decode(any2EvmMessage.sender, (address))
-        ) // 确保源链和发件人被列入允许名单
+        onlyAllowlisted(any2EvmMessage.sourceChainSelector, abi.decode(any2EvmMessage.sender, (address))) // 确保源链和发件人被列入允许名单
     {
         /* solhint-disable no-empty-blocks */
         try this.processMessage(any2EvmMessage) {
             // 本示例中故意为空；如果 processMessage 成功，则无需采取任何行动
         } catch (bytes memory err) {
             // 可以根据捕获的错误设置不同的错误代码。每个都可以有不同的处理方式。
-            s_failedMessages.set(
-                any2EvmMessage.messageId,
-                uint256(ErrorCode.FAILED)
-            );
+            s_failedMessages.set(any2EvmMessage.messageId, uint256(ErrorCode.FAILED));
             s_messageContents[any2EvmMessage.messageId] = any2EvmMessage;
             // 不要撤销，以免 CCIP 撤销。改为发出事件。
             // 可以稍后重试该消息，而无需手动执行 CCIP。
@@ -390,15 +345,10 @@ contract ProgrammableDefensiveTokenTransfers is CCIPReceiver, OwnerIsCreator {
     /// @param any2EvmMessage 接收到的 CCIP 消息。
     /// @dev 将指定数量的代币转移到此合约的所有者。此功能必须是外部的，因为利用 Solidity 的 try/catch 错误处理机制。
     /// 它使用 `onlySelf`：只能由合约调用。
-    function processMessage(
-        Client.Any2EVMMessage calldata any2EvmMessage
-    )
+    function processMessage(Client.Any2EVMMessage calldata any2EvmMessage)
         external
         onlySelf
-        onlyAllowlisted(
-            any2EvmMessage.sourceChainSelector,
-            abi.decode(any2EvmMessage.sender, (address))
-        ) // 确保源链和发件人被列入允许名单
+        onlyAllowlisted(any2EvmMessage.sourceChainSelector, abi.decode(any2EvmMessage.sender, (address))) // 确保源链和发件人被列入允许名单
     {
         // 为测试目的模拟撤销
         if (s_simRevert) revert ErrorCase();
@@ -410,13 +360,11 @@ contract ProgrammableDefensiveTokenTransfers is CCIPReceiver, OwnerIsCreator {
     /// @param messageId 失败消息的唯一标识符。
     /// @param tokenReceiver 将代币发送到的地址。
     /// @dev 该功能只能由合约所有者调用。它更改消息的状态从 'failed(失败)' 到 'resolved(已解决)'，以防止重复条目和多次重试相同的消息
-    function retryFailedMessage(
-        bytes32 messageId,
-        address tokenReceiver
-    ) external onlyOwner {
+    function retryFailedMessage(bytes32 messageId, address tokenReceiver) external onlyOwner {
         // 检查消息是否失败；如果没有，则撤销交易。
-        if (s_failedMessages.get(messageId) != uint256(ErrorCode.FAILED))
+        if (s_failedMessages.get(messageId) != uint256(ErrorCode.FAILED)) {
             revert MessageNotFailed(messageId);
+        }
 
         // 将错误代码设置为 RESOLVED，以禁止重新进入和多次重试同一失败消息。
         s_failedMessages.set(messageId, uint256(ErrorCode.RESOLVED));
@@ -426,10 +374,7 @@ contract ProgrammableDefensiveTokenTransfers is CCIPReceiver, OwnerIsCreator {
 
         // 本示例期望一次发送一枚代币，但你可以处理多个代币。
         // 将关联的代币转移到指定的接收者作为紧急逃生方式。
-        IERC20(message.destTokenAmounts[0].token).safeTransfer(
-            tokenReceiver,
-            message.destTokenAmounts[0].amount
-        );
+        IERC20(message.destTokenAmounts[0].token).safeTransfer(tokenReceiver, message.destTokenAmounts[0].amount);
 
         // 发出事件，表明消息已被恢复。
         emit MessageRecovered(messageId);
@@ -442,9 +387,7 @@ contract ProgrammableDefensiveTokenTransfers is CCIPReceiver, OwnerIsCreator {
         s_simRevert = simRevert;
     }
 
-    function _ccipReceive(
-        Client.Any2EVMMessage memory any2EvmMessage
-    ) internal override {
+    function _ccipReceive(Client.Any2EVMMessage memory any2EvmMessage) internal override {
         s_lastReceivedMessageId = any2EvmMessage.messageId; // 获取消息ID
         s_lastReceivedText = abi.decode(any2EvmMessage.data, (string)); // 解码发送的文本
         // 预期一次转移一个代币，但可以转移多个代币。
@@ -476,12 +419,8 @@ contract ProgrammableDefensiveTokenTransfers is CCIPReceiver, OwnerIsCreator {
         address _feeTokenAddress
     ) private pure returns (Client.EVM2AnyMessage memory) {
         // 设置代币数量
-        Client.EVMTokenAmount[]
-            memory tokenAmounts = new Client.EVMTokenAmount[](1);
-        Client.EVMTokenAmount memory tokenAmount = Client.EVMTokenAmount({
-            token: _token,
-            amount: _amount
-        });
+        Client.EVMTokenAmount[] memory tokenAmounts = new Client.EVMTokenAmount[](1);
+        Client.EVMTokenAmount memory tokenAmount = Client.EVMTokenAmount({token: _token, amount: _amount});
         tokenAmounts[0] = tokenAmount;
         // 在内存中创建一个 EVM2AnyMessage 结构，包含发送跨链消息所需的信息
         Client.EVM2AnyMessage memory evm2AnyMessage = Client.EVM2AnyMessage({
@@ -515,7 +454,7 @@ contract ProgrammableDefensiveTokenTransfers is CCIPReceiver, OwnerIsCreator {
         if (amount == 0) revert NothingToWithdraw();
 
         // 尝试发送资金，捕获成功状态并丢弃任何返回数据
-        (bool sent, ) = _beneficiary.call{value: amount}("");
+        (bool sent,) = _beneficiary.call{value: amount}("");
 
         // 如果发送失败，带有尝试转账信息的撤销
         if (!sent) revert FailedToWithdrawEth(msg.sender, _beneficiary, amount);
@@ -525,10 +464,7 @@ contract ProgrammableDefensiveTokenTransfers is CCIPReceiver, OwnerIsCreator {
     /// @dev 如果没有代币可提取，则此函数将回滚并显示'NothingToWithdraw'错误。
     /// @param _beneficiary 应将代币发送到的地址。
     /// @param _token 要提取的ERC20代币的合约地址。
-    function withdrawToken(
-        address _beneficiary,
-        address _token
-    ) public onlyOwner {
+    function withdrawToken(address _beneficiary, address _token) public onlyOwner {
         // 检索此合约的代币余额
         uint256 amount = IERC20(_token).balanceOf(address(this));
 
