@@ -50,14 +50,14 @@ contract ProgrammableDefensiveTokenTransfers is CCIPReceiver, OwnerIsCreator {
     }
 
     // 当消息发送到另一个链时发出的事件。
+    // 目的链的链选择器。
+    // 目的链上的接收地址。
+    // 被发送的文本。
+    // 被转移的代币地址。
+    // 被转移的代币数量。
+    // 用于支付CCIP费用的代币地址。
+    // 为发送消息支付的费用。
     event MessageSent( // CCIP消息的唯一ID。
-        // 目的链的链选择器。
-        // 目的链上的接收地址。
-        // 被发送的文本。
-        // 被转移的代币地址。
-        // 被转移的代币数量。
-        // 用于支付CCIP费用的代币地址。
-        // 为发送消息支付的费用。
         bytes32 indexed messageId,
         uint64 indexed destinationChainSelector,
         address receiver,
@@ -69,12 +69,12 @@ contract ProgrammableDefensiveTokenTransfers is CCIPReceiver, OwnerIsCreator {
     );
 
     // 当从另一个链收到消息时发出的事件。
+    // 来源链的链选择器。
+    // 来自源链的发件人地址。
+    // 收到的文本。
+    // 被转移的代币地址。
+    // 被转移的代币数量。
     event MessageReceived( // CCIP消息的唯一ID。
-        // 来源链的链选择器。
-        // 来自源链的发件人地址。
-        // 收到的文本。
-        // 被转移的代币地址。
-        // 被转移的代币数量。
         bytes32 indexed messageId,
         uint64 indexed sourceChainSelector,
         address sender,
