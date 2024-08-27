@@ -35,7 +35,7 @@ Similarly to VRF v2, VRF v2.5 will offer two methods for requesting randomness:
 - [Subscription](https://docs.chain.link/vrf/v2-5/overview/subscription): Create a subscription account and fund its balance with either native tokens or LINK. You can then connect multiple consuming contracts to the subscription account. When the consuming contracts request randomness, the transaction costs are calculated after the randomness requests are fulfilled and the subscription balance is deducted accordingly. This method allows you to fund requests for multiple consumer contracts from a single subscription.
 - [Direct funding](https://docs.chain.link/vrf/v2-5/overview/direct-funding): Consuming contracts directly pay with either native tokens or LINK when they request random values. You must directly fund your consumer contracts and ensure that there are enough funds to pay for randomness requests.
 
-https://docs.chain.link/vrf
+<https://docs.chain.link/vrf>
 
 **Chainlink VRF (Verifiable Random Function)** 。生成的随机数是密码学中的伪随机数。
 
@@ -53,7 +53,7 @@ https://docs.chain.link/vrf
 - 随机数生成函数：G(PrivateKey, Seed) -> (RondomNumber, Proof)
 - 验证函数：V(Proof, RondomNumber, PrivateKey, Seed) -> (bool)
 
-###  工作流程
+### 工作流程
 
 ![subscription-architecture-diagram](https://docs.chain.link/images/vrf/v2-5/subscription-architecture-diagram.png)
 
@@ -72,12 +72,12 @@ https://docs.chain.link/vrf
 uint private _counter = 0;
 
 function getRandomWithTen() external returns (uint) {
-	++_counter;
-	return uint(keccak256(abi.encode(
-		blockhash(1),
-		gasleft(),
-		block.number,
-		_counter
+ ++_counter;
+ return uint(keccak256(abi.encode(
+  blockhash(1),
+  gasleft(),
+  block.number,
+  _counter
   ))) % 10;
 }
 ```
@@ -264,7 +264,7 @@ contract QiaoToken is ERC20, ERC20Permit, VRFConsumerBaseV2Plus {
 
 ![image-20240810094329132](assets/image-20240810094329132.png)
 
-###  第九步：Funds added
+### 第九步：Funds added
 
 ![image-20240810094508581](assets/image-20240810094508581.png)
 
@@ -438,7 +438,7 @@ newLists 为三个地址
 
 ### 第十八步：查看 Chainlink Recent fulfillments 可以看到状态是成功的
 
-https://vrf.chain.link/sepolia/20706299126585294390866835777988499780843478407105517934508556694810173553544
+<https://vrf.chain.link/sepolia/20706299126585294390866835777988499780843478407105517934508556694810173553544>
 
 ![image-20240810101907411](assets/image-20240810101907411.png)
 
@@ -452,7 +452,7 @@ https://vrf.chain.link/sepolia/2070629912658529439086683577798849978084347840710
 
 ![image-20240810102107509](assets/image-20240810102107509.png)
 
-### 第二十一步：MetaMask 查看 Token 
+### 第二十一步：MetaMask 查看 Token
 
 ![image-20240810102148330](assets/image-20240810102148330.png)
 
@@ -462,15 +462,11 @@ https://vrf.chain.link/sepolia/2070629912658529439086683577798849978084347840710
 
 ![image-20240810103004218](assets/image-20240810103004218.png)
 
-
-
 ### 第二十三步：查看余额
 
 ![image-20240810103206696](assets/image-20240810103206696.png)
 
-#### 注意：生产中需要及时查看余额，如果余额不足需要及时添加，否则会影响请求，结果会失败。
-
-
+#### 注意：生产中需要及时查看余额，如果余额不足需要及时添加，否则会影响请求，结果会失败
 
 ## 利用 Chainlink Automation 自动化 Bank 合约：使用 Solidity 实现动态存款管理和自动转账
 
@@ -558,7 +554,7 @@ contract Bank is AutomationCompatibleInterface {
 
 - performUpKeep()：这个方法接受从checkUpKeep()方法返回的信息作为参数。Chainlink Automation 会触发对它的调用。函数应该先进行一些检查，再执行链上其他计算。
 
-更多请参考：https://docs.chain.link/chainlink-automation/guides/compatible-contracts
+更多请参考：<https://docs.chain.link/chainlink-automation/guides/compatible-contracts>
 
 在上面代码中，
 
@@ -695,15 +691,13 @@ hello-chainlink on  main [!?] via 🅒 base took 49.6s
 
 #### 部署成功
 
-https://sepolia.etherscan.io/address/0x647f8ff9aa0afc1d560a0c1366734b1f188aa896#code
+<https://sepolia.etherscan.io/address/0x647f8ff9aa0afc1d560a0c1366734b1f188aa896#code>
 
 ![image-20240811102919953](assets/image-20240811102919953.png)
 
-
-
 ### 第二步：打开 Chainlink Automation 主页，点击注册 [Register new Upkeep 按钮](https://automation.chain.link/sepolia/new)
 
-https://automation.chain.link/sepolia
+<https://automation.chain.link/sepolia>
 
 ![image-20240810233057744](assets/image-20240810233057744.png)
 
@@ -719,7 +713,7 @@ https://automation.chain.link/sepolia
 
 ![image-20240810233504704](assets/image-20240810233504704.png)
 
-### 第六步：填写相关信息：UpKeep name、Starting balance(LINK)、Gas limit、Project name(可选) ...
+### 第六步：填写相关信息：UpKeep name、Starting balance(LINK)、Gas limit、Project name(可选)
 
 ![image-20240810233716638](assets/image-20240810233716638.png)
 
@@ -739,8 +733,6 @@ https://automation.chain.link/sepolia
 
 ![image-20240810234105255](assets/image-20240810234105255.png)
 
-
-
 ### 第十一步：点击 sign
 
 ![image-20240810234047774](assets/image-20240810234047774.png)
@@ -751,11 +743,9 @@ https://automation.chain.link/sepolia
 
 ### 第十三步：View Upkeep
 
-https://automation.chain.link/sepolia/6794270141962714421784358681294410476764730312771526144237727479012587802307
+<https://automation.chain.link/sepolia/6794270141962714421784358681294410476764730312771526144237727479012587802307>
 
 ![image-20240810234315650](assets/image-20240810234315650.png)
-
-
 
 ### 第十四步：查看并调用合约进行测试
 
@@ -768,7 +758,7 @@ https://automation.chain.link/sepolia/679427014196271442178435868129441047676473
 - **第一步：deposit 0.008 ETH**
 - **第二步：deposit 0.002 ETH**
 - **第三步：查询余额，超过临界点 一半转入 owner 故查询余额为 0.005**
-- **第四步：查询 Chainlink Automation 进行确认 **
+- **第四步：查询 Chainlink Automation 进行确认**
 
 ### 第十五步：deposit 0.008 ETH
 
@@ -780,7 +770,7 @@ https://automation.chain.link/sepolia/679427014196271442178435868129441047676473
 
 ### 第十七步：查看 Transaction Details
 
-https://sepolia.etherscan.io/tx/0x7140fd39f6ff0199a0b8e9d123bcd18d93ace527de9fe44d36358fd17362d4bb
+<https://sepolia.etherscan.io/tx/0x7140fd39f6ff0199a0b8e9d123bcd18d93ace527de9fe44d36358fd17362d4bb>
 
 ![image-20240810234939526](assets/image-20240810234939526.png)
 
@@ -798,15 +788,11 @@ https://sepolia.etherscan.io/tx/0x7140fd39f6ff0199a0b8e9d123bcd18d93ace527de9fe4
 
 ### 第二十一步：查看 deposit 0.002 ETH Transaction Details
 
-https://sepolia.etherscan.io/tx/0xbffc1f8eff9f93fb77d350d06813553a354eed0c82b89ec8e945b90386184f80
+<https://sepolia.etherscan.io/tx/0xbffc1f8eff9f93fb77d350d06813553a354eed0c82b89ec8e945b90386184f80>
 
 ![image-20240810235722932](assets/image-20240810235722932.png)
 
-
-
 ![image-20240811000014697](assets/image-20240811000014697.png)
-
-
 
 ### 第二十二步：查询余额 0.005 ETH
 
@@ -822,48 +808,34 @@ https://sepolia.etherscan.io/tx/0xbffc1f8eff9f93fb77d350d06813553a354eed0c82b89e
 
 ### 第二十三步：在 Chainlink Automation 中查看 History
 
-https://automation.chain.link/sepolia/6794270141962714421784358681294410476764730312771526144237727479012587802307
+<https://automation.chain.link/sepolia/6794270141962714421784358681294410476764730312771526144237727479012587802307>
 
 ![image-20240811000331573](assets/image-20240811000331573.png)
 
 ### 第二十四步：查看交易详情确认自动化任务按预期完成
 
-https://sepolia.etherscan.io/tx/0x93fd1050b19966c2fad97ea9c5389e2596501b9931c1cfb372fdf885cb91b6c2
+<https://sepolia.etherscan.io/tx/0x93fd1050b19966c2fad97ea9c5389e2596501b9931c1cfb372fdf885cb91b6c2>
 
 ![image-20240811000454617](assets/image-20240811000454617.png)
 
-##### 可以看到合约给owner转了一半的存款余额0.005 ETH，成功实现预期目标，完美！
+##### 可以看到合约给owner转了一半的存款余额0.005 ETH，成功实现预期目标，完美
 
-##### 自动化任务实现：当 Bank 合约的存款超过 0.008 ETH时， 转移一半的存款到Owner。
-
-
+##### 自动化任务实现：当 Bank 合约的存款超过 0.008 ETH时， 转移一半的存款到Owner
 
 ## 参考
 
 - <https://medium.com/coinmonks/building-randomness-with-chainlink-vrf-1e3990e05193>
 - <https://github.com/SupaMega24/fantasy-team-vrf/blob/main/src/RandomTeamSelector.sol>
 - <https://vrf.chain.link/arbitrum-sepolia>
-- https://github.com/smartcontractkit/chainlink
-
-
-
-
+- <https://github.com/smartcontractkit/chainlink>
 
 ![image-20240811142803020](assets/image-20240811142803020.png)
 
-
-
 ![image-20240811143519952](assets/image-20240811143519952.png)
-
-
-
-
 
 ![image-20240811144307531](assets/image-20240811144307531.png)
 
 推导过程
-
-
 
 ### 1 L1 遍历
 
@@ -879,7 +851,7 @@ https://sepolia.etherscan.io/tx/0x93fd1050b19966c2fad97ea9c5389e2596501b9931c1cf
 
 Channel-bank  修剪 查看通道可以存放多少数据 超时数据丢弃
 
-Channel-read 从通道里面读取数据 Verify L1  解码规范 按照批次解析数据 
+Channel-read 从通道里面读取数据 Verify L1  解码规范 按照批次解析数据
 
 区块头 批次是否有效 过滤 参数校验
 
@@ -893,4 +865,9 @@ Safe L1  fin
 
 L2 出块 需要依赖 L1 区块时间戳 Ep
 
-### 
+### CCIP
+
+ 在Arbitrum Sepolia上部署XNFT.sol
+0xf07a6E488D4F93D9d0EEfFfcB1fdaE1fbC16145E
+
+0x3D246C60583efCFE69Fa931b7c4c9D6473B1A571
